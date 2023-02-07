@@ -4,6 +4,7 @@ from django.test import TestCase
 from ..models import Group, Post
 
 User = get_user_model()
+REDUCTION_TEXT = 15
 
 
 class PostModelTest(TestCase):
@@ -24,7 +25,7 @@ class PostModelTest(TestCase):
     def test_models_have_correct_post_names(self):
         """Проверяем, что у моделей корректно работает __str__."""
         post = PostModelTest.post
-        expected_post_name = post.text
+        expected_post_name = post.text[:REDUCTION_TEXT]
         self.assertEqual(expected_post_name, str(post))
 
     def test_models_have_correct_group_names(self):

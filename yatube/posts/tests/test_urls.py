@@ -45,7 +45,6 @@ class PostURLTests(TestCase):
         }
 
     def setUp(self):
-        self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.author)
 
@@ -54,7 +53,7 @@ class PostURLTests(TestCase):
 
         for template, address in self.public_url_address.items():
             with self.subTest(template=template):
-                response = self.guest_client.get(address)
+                response = Client().get(address)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_private_url_exists_at_desired_location_authorized(self):
@@ -72,7 +71,7 @@ class PostURLTests(TestCase):
 
         for address, template in self.private_url_address.items():
             with self.subTest(template=template):
-                response = self.guest_client.get(address, follow=True)
+                response = Client().get(address, follow=True)
                 self.assertRedirects(
                     response, f'/auth/login/?next={address}'
                 )

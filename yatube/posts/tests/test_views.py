@@ -7,6 +7,8 @@ from ..models import Group, Post
 
 User = get_user_model()
 NUMBER_POSTS_FOR_TEST_PAGINATOR = 13
+PAGE_CONTAINS_TEN = 10
+DINAMIC_CONST = NUMBER_POSTS_FOR_TEST_PAGINATOR - PAGE_CONTAINS_TEN
 
 
 class PostPagesTests(TestCase):
@@ -45,7 +47,6 @@ class PostPagesTests(TestCase):
         }
 
     def setUp(self):
-        self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.author)
 
@@ -160,9 +161,10 @@ class PaginatorViewsTest(TestCase):
     def test_first_page_contains_ten_records(self):
         for reverse_name in self.namespaces:
             response = self.client.get(reverse_name)
-            self.assertEqual(len(response.context['page_obj']), 10)
+            self.assertEqual(len(response.context['page_obj']),
+                             PAGE_CONTAINS_TEN)
 
     def test_second_page_contains_three_records(self):
         for reverse_name in self.namespaces:
             response = self.client.get(reverse_name + '?page=2')
-            self.assertEqual(len(response.context['page_obj']), 3)
+            self.assertEqual(len(response.context['page_obj']), DINAMIC_CONST)
