@@ -1,10 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from ..models import Group, Post
+from ..models import Group, Post, REDUCTION_TEXT
 
 User = get_user_model()
-REDUCTION_TEXT = 15
 
 
 class PostModelTest(TestCase):

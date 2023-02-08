@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 User = get_user_model()
+REDUCTION_TEXT = 15
 
 
 class Group(models.Model):
@@ -43,4 +44,4 @@ class Post(models.Model):
         ordering = ['-pub_date']
 
     def __str__(self):
-        return f'{str(self.text)[:15]}'
+        return f'{str(self.text)[:REDUCTION_TEXT]}'

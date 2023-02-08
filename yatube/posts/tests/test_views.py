@@ -4,11 +4,10 @@ from django.urls import reverse
 from django import forms
 
 from ..models import Group, Post
+from ..views import LIMIT_POSTS_ON_THE_PAGE
 
 User = get_user_model()
 NUMBER_POSTS_FOR_TEST_PAGINATOR = 13
-PAGE_CONTAINS_TEN = 10
-DINAMIC_CONST = NUMBER_POSTS_FOR_TEST_PAGINATOR - PAGE_CONTAINS_TEN
 
 
 class PostPagesTests(TestCase):
@@ -95,8 +94,8 @@ class PostPagesTests(TestCase):
         post_group_0 = first_object.group.id
         self.assertEqual(post_group_0, self.group.id)
         self.assertEqual(post_id_0, self.post.id)
-        self.assertEqual(post_text_0, 'Тестовый пост')
-        self.assertEqual(post_author_0, 'Авторизованный пользователь')
+        self.assertEqual(post_text_0, self.post.text)
+        self.assertEqual(post_author_0, self.author.username)
 
     def test_group_list_page_show_correct_context(self):
         """Шаблон group_list сформирован с правильным контекстом."""
@@ -116,7 +115,7 @@ class PostPagesTests(TestCase):
             'posts:profile', kwargs={'username': self.author.username})
         )
         self.assertEqual(response.context.get('user_name').username,
-                         'Авторизованный пользователь')
+                         self.author.username)
         self.assertEqual(response.context.get('user_name').id,
                          self.author.id)
 
@@ -124,9 +123,9 @@ class PostPagesTests(TestCase):
         """Шаблон post_detail сформирован с правильным контекстом."""
         response = (self.authorized_client.get(reverse(
                     'posts:post_detail', kwargs={'post_id': self.post.id})))
-        self.assertEqual(response.context.get('post').text, 'Тестовый пост')
+        self.assertEqual(response.context.get('post').text, self.post.text)
         self.assertEqual(response.context.get('post').author.username,
-                         'Авторизованный пользователь')
+                         self.author.username)
         self.assertEqual(response.context.get('post').id, self.post.id)
 
 
@@ -161,10 +160,14 @@ class PaginatorViewsTest(TestCase):
     def test_first_page_contains_ten_records(self):
         for reverse_name in self.namespaces:
             response = self.client.get(reverse_name)
-            self.assertEqual(len(response.context['page_obj']),
-                             PAGE_CONTAINS_TEN)
+            count_posts = len(response.context['page_obj'])
+            self.assertEqual(count_posts,
+                             LIMIT_POSTS_ON_THE_PAGE)
 
     def test_second_page_contains_three_records(self):
         for reverse_name in self.namespaces:
             response = self.client.get(reverse_name + '?page=2')
-            self.assertEqual(len(response.context['page_obj']), DINAMIC_CONST)
+            count_second_page = (NUMBER_POSTS_FOR_TEST_PAGINATOR
+                                 - LIMIT_POSTS_ON_THE_PAGE)
+            self.assertEqual(len(response.context['page_obj']),
+                             count_second_page)

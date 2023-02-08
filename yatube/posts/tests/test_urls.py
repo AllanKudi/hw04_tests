@@ -53,7 +53,7 @@ class PostURLTests(TestCase):
 
         for template, address in self.public_url_address.items():
             with self.subTest(template=template):
-                response = Client().get(address)
+                response = self.client.get(address)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_private_url_exists_at_desired_location_authorized(self):
@@ -71,7 +71,7 @@ class PostURLTests(TestCase):
 
         for address, template in self.private_url_address.items():
             with self.subTest(template=template):
-                response = Client().get(address, follow=True)
+                response = self.client.get(address, follow=True)
                 self.assertRedirects(
                     response, f'/auth/login/?next={address}'
                 )

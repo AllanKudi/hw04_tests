@@ -31,7 +31,7 @@ class PostFormTests(TestCase):
         posts_count = Post.objects.count()
         form_data = {
             'group': self.group.id,
-            'text': self.post.text,
+            'text': 'Измененный текст',
         }
         response = self.authorized_client.post(
             reverse('posts:post_create'),
