@@ -45,7 +45,7 @@ class PostFormTests(TestCase):
         self.assertTrue(
             Post.objects.filter(
                 group=self.group.id,
-                text=self.post.text
+                text=form_data['text']
             ).exists()
         )
 
@@ -54,7 +54,7 @@ class PostFormTests(TestCase):
         posts_count = Post.objects.count()
         form_data = {
             'group': self.group.id,
-            'text': 'Измененный текст',
+            'text': 'Измененный текст 2',
         }
         response_edit = self.authorized_client.post(
             reverse('posts:post_edit', kwargs={'post_id': self.post.id}),
@@ -68,7 +68,7 @@ class PostFormTests(TestCase):
             Post.objects.filter(
                 id=self.post.id,
                 group=self.group.id,
-                text='Измененный текст'
+                text=form_data['text']
             ).exists()
         )
         self.assertEqual(Post.objects.count(), posts_count)
