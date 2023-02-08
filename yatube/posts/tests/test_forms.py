@@ -44,7 +44,7 @@ class PostFormTests(TestCase):
         self.assertEqual(Post.objects.count(), posts_count + 1)
         self.assertTrue(
             Post.objects.filter(
-                group=self.group.id,
+                group=form_data['group'],
                 text=form_data['text']
             ).exists()
         )
@@ -67,7 +67,7 @@ class PostFormTests(TestCase):
         self.assertTrue(
             Post.objects.filter(
                 id=self.post.id,
-                group=self.group.id,
+                group=form_data['group'],
                 text=form_data['text']
             ).exists()
         )
