@@ -103,10 +103,10 @@ class PostPagesTests(TestCase):
             'posts:group_list', kwargs={'slug': self.group.slug})
         )
         self.assertEqual(response.context.get('group').title,
-                         'Тестовая группа')
+                         self.group.title)
         self.assertEqual(response.context.get('group').description,
-                         'Тестовое описание')
-        self.assertEqual(response.context.get('group').slug, 'test_slug')
+                         self.group.description)
+        self.assertEqual(response.context.get('group').slug, self.group.slug)
         self.assertEqual(response.context.get('group').id, self.group.id)
 
     def test_profile_page_show_correct_context(self):
